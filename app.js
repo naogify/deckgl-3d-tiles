@@ -34,7 +34,6 @@ export default function App({
 
     mapNode.current = new geolonia.Map({
       container: mapDiv.current,
-      style: 'geolonia/basic',
       interactive: true,
       center: [initialViewState.longitude, initialViewState.latitude],
       bearing: initialViewState.bearing,
@@ -93,6 +92,7 @@ export default function App({
       <div
         ref={mapDiv}
         id="map"
+        data-style="geolonia/gsi"
         data-navigation-control="off"
       />
       <DeckGL layers={[tile3DLayer]} initialViewState={initialViewState} onViewStateChange={onViewStateChange} controller={true}>
