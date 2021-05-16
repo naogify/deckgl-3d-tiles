@@ -1,104 +1,50 @@
-import React, { useRef, useState, useLayoutEffect } from "react"
-import {render} from 'react-dom';
-import DeckGL from '@deck.gl/react';
-import {Tile3DLayer} from '@deck.gl/geo-layers';
+import React from "react"
+import {render} from 'react-dom'
+import DeckGL from '@deck.gl/react'
+import {TerrainLayer, Tile3DLayer} from '@deck.gl/geo-layers'
+import {Tiles3DLoader} from '@loaders.gl/3d-tiles'
 
-import {Tiles3DLoader} from '@loaders.gl/3d-tiles';
+export default function App() {
 
-const TILESET_URL = `./tileset.json`;
-
-const INITIAL_VIEW_STATE = {
-  latitude: 40,
-  longitude: -75,
-  pitch: 45,
-  maxPitch: 60,
-  bearing: 0,
-  minZoom: 2,
-  maxZoom: 30,
-  zoom: 17
-};
-
-export default function App({
-  updateAttributions
-}) {
-  const [initialViewState, setInitialViewState] = useState(INITIAL_VIEW_STATE);
-  const mapDiv = useRef(null)
-  const mapNode = useRef(null)
-
-  // @ts-ignore
-  const { geolonia } = window
-
-  useLayoutEffect(() => {
-    if (!mapDiv.current) { return }
-    if (mapNode.current !== null) { return }
-
-    mapNode.current = new geolonia.Map({
-      container: mapDiv.current,
-      style: 'geolonia/gsi',
-      interactive: true,
-      center: [initialViewState.longitude, initialViewState.latitude],
-      bearing: initialViewState.bearing,
-      pitch: initialViewState.pitch,
-      maxPitch: initialViewState.maxPitch,
-      minZoom: initialViewState.minZoom,
-      maxZoom: initialViewState.maxZoom,
-      zoom: initialViewState.zoom,
-    })
-  }, [mapDiv, geolonia])
-
-  const onTilesetLoad = tileset => {
-    // Recenter view to cover the new tileset
-    const {cartographicCenter, zoom} = tileset;
-    const lon = cartographicCenter[0]
-    const lat = cartographicCenter[1]
-
-    setInitialViewState({
-      ...INITIAL_VIEW_STATE,
-      longitude: lon,
-      latitude: lat,
-      zoom
-    });
-
-    mapNode.current.jumpTo({
-      center: [lon, lat],
-      zoom,
-    })
-
-    if (updateAttributions) {
-      updateAttributions(tileset.credits && tileset.credits.attributions);
-    }
-  };
-
-  const onViewStateChange = ({viewState}) => {
-    mapNode.current.jumpTo({
-      center: [viewState.longitude, viewState.latitude],
-      zoom: viewState.zoom,
-      bearing: viewState.bearing,
-      pitch: viewState.pitch,
-    })
-  }
+  const terrainLayer = new TerrainLayer({
+    id: "terrain",
+    minZoom: 0,
+    maxZoom: 14,
+    elevationDecoder: {
+      rScaler: 6553.6,
+      gScaler: 25.6,
+      bScaler: 0.1,
+      offset: -9965
+    },
+    elevationData: 'https://tileserver-dev.geolonia.com/gsi-dem/tiles/{z}/{x}/{y}.png',
+    texture: 'https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg',
+    wireframe: false,
+    color: [255, 255, 255],
+  });
 
   const tile3DLayer = new Tile3DLayer({
     id: 'tile-3d-layer',
-    pointSize: 2,
-    data: TILESET_URL,
+    pointSize: 1,
+    data: 'https://raw.githubusercontent.com/naogify/deckgl-3d-tiles/main/tileset.json',
     loader: Tiles3DLoader,
-    pickable: true,
-    onTilesetLoad,
-    onClick: (info, event) => console.log('Clicked:', info, event)
-  });
+    pickable: false,
+  })
 
   return (
-    <>
-      <div
-        ref={mapDiv}
-        id="map"
-        data-navigation-control="off"
-      />
-      <DeckGL layers={[tile3DLayer]} initialViewState={initialViewState} onViewStateChange={onViewStateChange} controller={true}>
-      </DeckGL>
-    </>
-  );
+    <DeckGL
+      mapStyle={'geolonia/midnight'}
+      initialViewState={{
+        longitude: 139.7673068,
+        latitude: 35.6809591,
+        zoom: 14,
+        // maxZoom: 18,
+        pitch: 60,
+        bearing: 0
+      }}
+      controller={true}
+      layers={[terrainLayer, tile3DLayer]}
+    />
+  )
 }
 
 export function renderToDOM(container) {
