@@ -20,6 +20,7 @@ export default function App() {
     texture: 'https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg',
     wireframe: false,
     color: [255, 255, 255],
+    pickable: false,
   });
 
   const tile3DLayer = new Tile3DLayer({
@@ -27,7 +28,12 @@ export default function App() {
     pointSize: 1,
     data: 'https://raw.githubusercontent.com/naogify/deckgl-3d-tiles/main/tileset.json',
     loader: Tiles3DLoader,
-    pickable: false,
+    pickable: true,
+    onClick: (info,event)=>{
+      console.log(info)
+      return true
+    },
+    opacity: 0.8
   })
 
   return (
