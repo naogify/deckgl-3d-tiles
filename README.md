@@ -1,27 +1,16 @@
-This is a minimal standalone version of the Tile3DLayer example
-on [deck.gl](http://deck.gl) website.
+Deckgl-3d-tiles 
 
-### Usage
+[PLATEAU](https://www.mlit.go.jp/plateau/)で配布されている3DTileを、[Geolonia](https://docs.geolonia.com/)の地図で表示するためのサンプルです。
 
-Copy the content of this folder to your project. 
+* サンプルで標高タイルを使用していますが、標高タイルはテスト中のため予告なく仕様変更されたり、削除されたりする可能性がありますので、あらかじめご了承ください。
 
-To download the Cesium 3D tileset, you need a Cesium ion access token, and set it to `ION_TOKEN` in `app.js`.
+## 使い方
+サンプルを確認
 
-```bash
-# install dependencies
-npm install
-# or
-yarn
-# bundle and serve the app with webpack
-npm start
+```
+$ git@github.com:naogify/deckgl-3d-tiles.git && cd deckgl-3d-tiles
+$ npm install
+$ npm start
 ```
 
-### Data format
-
-Sample data is served by [Cesium ion](https://cesium.com/cesium-ion/).
-
-To use your own data, check out the [documentation of Tile3DLayer](../../../docs/api-reference/geo-layers/tile-3d-layer.md)
-
-### Basemap
-
-The basemap in this example is provided by [CARTO free basemap service](https://carto.com/basemaps). To use an alternative base map solution, visit [this guide](https://deck.gl/docs/get-started/using-with-map#using-other-basemap-services)
+ローカル環境でサーバーが立ち上がります。http://localhost:8000 をクリックして下さい。
