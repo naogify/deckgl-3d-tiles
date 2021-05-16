@@ -13,4 +13,4 @@ $ npm install
 $ npm start
 ```
 
-ローカル環境でサーバーが立ち上がります。http://localhost:8000 をクリックして下さい。
+ローカル環境でサーバーが立ち上がります。[http://localhost:8000 をクリック](http://localhost:8000)して下さい。
