@@ -1,4 +1,4 @@
-import React, { useRef, useState, useLayoutEffect } from "react"
+import React from "react"
 import {render} from 'react-dom'
 import DeckGL from '@deck.gl/react'
 import {TerrainLayer, Tile3DLayer} from '@deck.gl/geo-layers'
