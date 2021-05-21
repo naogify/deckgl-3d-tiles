@@ -3,8 +3,17 @@ import {render} from 'react-dom'
 import DeckGL from '@deck.gl/react'
 import {TerrainLayer, Tile3DLayer} from '@deck.gl/geo-layers'
 import {Tiles3DLoader} from '@loaders.gl/3d-tiles'
+import {FirstPersonView} from '@deck.gl/core'
 
 export default function App() {
+
+  const view = new FirstPersonView({
+    controller: {
+      keyboard: {
+        moveSpeed: 100,
+      }, 
+      inertia: 1
+  }});
 
   const terrainLayer = new TerrainLayer({
     id: "terrain",
@@ -21,6 +30,7 @@ export default function App() {
     wireframe: false,
     color: [255, 255, 255],
     pickable: false,
+    opacity: 0.5
   });
 
   const tile3DLayer = new Tile3DLayer({
@@ -29,23 +39,22 @@ export default function App() {
     data: 'https://raw.githubusercontent.com/naogify/deckgl-3d-tiles/main/tileset.json',
     loader: Tiles3DLoader,
     pickable: true,
-    onClick: (info,event)=>{
-      console.log(info)
-      return true
-    },
     opacity: 0.8
   })
 
   return (
     <DeckGL
+      views={view}
       mapStyle={'geolonia/midnight'}
       initialViewState={{
         longitude: 139.7673068,
         latitude: 35.6809591,
         zoom: 14,
-        // maxZoom: 18,
-        pitch: 60,
-        bearing: 0
+        pitch: 0,
+        bearing: 0,
+        maxPitch: 0,
+        minPitch: 0,
+        position: [0, 0, 70]
       }}
       controller={true}
       layers={[terrainLayer, tile3DLayer]}
